@@ -14,7 +14,7 @@ from snippets.models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES
 
 # Serialize the model into native python data type. Here it is going to be a
 # dictionary.
-class SnippetSerializer(serializers.ModelSerializer):
+class SnippetSerializer(serializers.HyperlinkedModelSerializer):
     # pk = serializers.Field()  # Note: `Field` is an untyped read-only field.
     # title = serializers.CharField(required=False,
     #                               max_length=100)
@@ -45,16 +45,24 @@ class SnippetSerializer(serializers.ModelSerializer):
     #
     #     # Create new instance
     #     return Snippet(**attrs)
+    # owner = serializers.Field(source='owner.username')
+    owner = serializers.HyperlinkedRelatedField(view_name='user-detail')
+    highlight = serializers.HyperlinkedIdentityField(
+            view_name='snippet-highlight', format='html')
 
     class Meta:
         model = Snippet
-        fields = ('id', 'title', 'code', 'linenos', 'language', 'style',
-                'owner',)
+        fields = ('url', 'highlight', 'owner', 'title', 'code', 'linenos',
+                'language', 'style',)
 
 
-class UserSerializer(serializers.ModelSerializer):
-    snippets = serializers.PrimaryKeyRelatedField(many=True)
+# class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    # snippets = serializers.PrimaryKeyRelatedField(many=True)
+    snippets = serializers.HyperlinkedRelatedField(many=True,
+            view_name='snippet-detail')
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'snippets')
+        # fields = ('id', 'username', 'snippets')
+        fields = ('url', 'username', 'snippets')
