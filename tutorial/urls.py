@@ -28,5 +28,5 @@ urlpatterns = patterns('',
 )
 
 urlpatterns += patterns('',
-    url(r'^', include('snippets.urls')),
+    url(r'^api/', include('snippets.urls')),
 )

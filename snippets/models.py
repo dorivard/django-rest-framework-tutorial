@@ -12,12 +12,14 @@ class Snippet(models.Model):
     title = models.CharField(max_length=100, blank=True, default='')
     code = models.TextField()
     linenos = models.BooleanField(default=False)
+    # allows to set the language of the snippets. e.g.: python, java, ...
     language = models.CharField(choices=LANGUAGE_CHOICES,
-                                default='python',
-                                max_length=100)
+            default='python',
+            max_length=100)
+    # allows to set the style that pygments will apply during the coloration.
     style = models.CharField(choices=STYLE_CHOICES,
-                             default='friendly',
-                             max_length=100)
+            default='friendly',
+            max_length=100)
 
     class Meta:
         ordering = ('created',)
