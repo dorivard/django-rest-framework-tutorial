@@ -28,7 +28,7 @@ from snippets.serializers import SnippetSerializer
 #         kwargs['content_type'] = 'application/json'
 #         super(JSONResponse, self).__init__(content, **kwargs)
 
-#
+# View part 1
 # @api_view(['GET', 'POST'])
 # def snippet_list(request, format=None):
 #     """
@@ -47,22 +47,41 @@ from snippets.serializers import SnippetSerializer
 #             return Response(serializer.data, status=status.HTTP_200_OK)
 #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class SnippetList(APIView):
-    """Class Based view that list all the Snippet."""
-    def get(self, request, format=None):
-        snippets = Snippet.objects.all()
-        serializer = SnippetSerializer(snippets, many=True)
-        return Response(serializer.data)
+# View part 2
+# class SnippetList(APIView):
+#     """Class Based view that list all the Snippet."""
+#     def get(self, request, format=None):
+#         snippets = Snippet.objects.all()
+#         serializer = SnippetSerializer(snippets, many=True)
+#         return Response(serializer.data)
+#
+#     def post(self, request, format=None):
+#         serializer = SnippetSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#
+#         return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
-    def post(self, request, format=None):
-        serializer = SnippetSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+# View part 3
+# class SnippetList(mixins.ListModelMixin, mixins.CreateModelMixin,
+#             generics.GenericAPIView):
+#     """Class Based view that list all the Snippet."""
+#     queryset = Snippet.objects.all()
+#     serializer_class = SnippetSerializer
+#
+#     def get(self, request, *args, **kwargs):
+#         return self.list(request, *args, **kwargs)
+#
+#     def post(self, request, *args, **kwargs):
+#         return self.create(request, *args, **kwargs)
 
-        return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+# View part 3 Suite
+class SnippetList(generics.ListCreateAPIView):
+    queryset = Snippet.objects.all()
+    serializer_class = SnippetSerializer
 
-
+# View part 1
 # @api_view(['GET', 'PUT', 'DELETE'])
 # def snippet_detail(request, pk, format=None):
 #     """
@@ -88,30 +107,54 @@ class SnippetList(APIView):
 #         snippet.delete()
 #         return Response(status=status.HTTP_204_NO_CONTENT)
 
-class SnippetDetail(APIView):
-    """Class based view to update, delete and read a Snippet"""
-    def get_object(self, pk):
-        try:
-            return Snippet.objects.get(pk=pk)
-        except Snippet.DoesNotExist:
-            raise Http404
+# View part 2
+# class SnippetDetail(APIView):
+#     """Class based view to update, delete and read a Snippet"""
+#     def get_object(self, pk):
+#         try:
+#             return Snippet.objects.get(pk=pk)
+#         except Snippet.DoesNotExist:
+#             raise Http404
+#
+#     def get(self, request, pk, format=None):
+#         snippet = self.get_object(pk)
+#         serializer = SnippetSerializer(snippet)
+#         return Response(serializer.data)
+#
+#     def put(self, request, pk, format=None):
+#         snippet = self.get_object(pk)
+#         serializer = SnippetSerializer(snippet, data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#
+#     def delete(self, request, pk, format=None):
+#         snippet = self.get_object(pk)
+#         snippet.delete()
+#
+#         return Response(status.HTTP_204_NO_CONTENT)
 
-    def get(self, request, pk, format=None):
-        snippet = self.get_object(pk)
-        serializer = SnippetSerializer(snippet)
-        return Response(serializer.data)
+# View part 3
+# class SnippetDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+#             mixins.DestroyModelMixin, generics.GenericAPIView):
+#     """Class based view to update, delete and read a Snippet"""
+#     queryset = Snippet.objects.all()
+#     serializer_class = SnippetSerializer
+#
+#     def get(self, request, *args, **kwargs):
+#         return self.retrieve(request, *args, **kwargs)
+#
+#     def put(self, request, *args, **kwargs):
+#         return self.update(request, *args, **kwargs)
+#
+#     def delete(self, request, *args, **kwargs):
+#         return self.destroy(request, *args, **kwargs)
 
-    def put(self, request, pk, format=None):
-        snippet = self.get_object(pk)
-        serializer = SnippetSerializer(snippet, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
+# View part 3 suite
+class SnippetDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Snippet.objects.all()
+    serializer_class = SnippetSerializer
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        snippet = self.get_object(pk)
-        snippet.delete()
-
-        return Response(status.HTTP_204_NO_CONTENT)
+    
