@@ -6,6 +6,7 @@ This module contains the
 from __future__ import unicode_literals, absolute_import
 
 from django.forms import widgets
+from django.contrib.auth.models import User
 
 from rest_framework import serializers
 from snippets.models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES
@@ -47,4 +48,13 @@ class SnippetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Snippet
-        fields = ('id', 'title', 'code', 'linenos', 'language', 'style')
+        fields = ('id', 'title', 'code', 'linenos', 'language', 'style',
+                'owner',)
+
+
+class UserSerializer(serializers.ModelSerializer):
+    snippets = serializers.PrimaryKeyRelatedField(many=True)
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'snippets')

@@ -45,4 +45,8 @@ curl http://127.0.0.1:8000/api/snippets/?format=json
 curl http://127.0.0.1:8000/api/snippets/
 
 curl http://127.0.0.1:8000/api/snippets/1/
+
+curl http://127.0.0.1:8000/api/users/
+
+curl -X POST http://127.0.0.1:8000/api/snippets/ -d "code=print 789" -u test:test1234
 """
