@@ -38,3 +38,11 @@ serializer.object
 
 # serialize a queryset
 serializer = SnippetSerializer(Snippet.objects.all(), many=True)
+
+"""
+curl http://127.0.0.1:8000/api/snippets/?format=json
+
+curl http://127.0.0.1:8000/api/snippets/
+
+curl http://127.0.0.1:8000/api/snippets/1/
+"""
